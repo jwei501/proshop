@@ -1,3 +1,4 @@
+import path from 'path'; //import the path module from the Node.js core modules
 import express from 'express';
 import dotenv from 'dotenv';
 import cookieParser from 'cookie-parser';
@@ -7,6 +8,8 @@ import { notFound, errorHandler } from './middleware/errorMiddleware.js'; //impo
 //import products from './data/products.js'; //import the products data from the products.js file
 import productRoutes from './routes/productRoutes.js'; //import the productRoutes from the productRoutes.js file
 import userRoutes from './routes/userRoutes.js'; //import the productRoutes from the productRoutes.js file
+import orderRoutes from './routes/orderRoutes.js'; //import the productRoutes from the productRoutes.js file
+import uploadRoutes from './routes/uploadRoutes.js'; //import the productRoutes from the productRoutes.js file
 const port = process.env.PORT || 5000; //set the port to the value of the PORT environment variable or 5000 if not set
 
 connectDB(); //connect to the MongoDB database using the connectDB function from the db.js file
@@ -32,6 +35,16 @@ app.get('/', (req, res) => {
 app.use('/api/products', productRoutes); //use the productRoutes for the '/api/products' route
 
 app.use('/api/users', userRoutes);
+
+app.use('/api/orders', orderRoutes); 
+
+app.use('/api/upload', uploadRoutes); //use the uploadRoutes for the '/api/upload' route
+
+app.get('/api/config/paypal', (req, res) => res.send({clientId: process.env.PAYPAL_CLIENT_ID})); //send the PAYPAL_CLIENT_ID from the environment variable to the client
+
+const __dirname = path.resolve(); //get the current directory name
+app.use('/uploads', express.static(path.join(__dirname, '/uploads'))); //use the express.static middleware to serve the static files from the uploads folder
+
 
 // the reason that we use notfound here is to handle the case that the route does not exist
 // if not exsits, it will not go to above 2 routes, so there is no response or error handled,

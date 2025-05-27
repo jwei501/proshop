@@ -1,6 +1,5 @@
 import { createSlice } from "@reduxjs/toolkit";
 import { updateCart } from "../utils/cartUtils";
-import { FaSave } from "react-icons/fa";
 
 const initialState = localStorage.getItem("cart") 
                         ? JSON.parse(localStorage.getItem("cart")) 
@@ -22,7 +21,7 @@ const cartSlice = createSlice({
             }
 
             return updateCart(state);
-        },
+        }, 
 
         removeFromCart: (state, action) => {
             state.cartItems = state.cartItems.filter((x) => x._id !== action.payload);
@@ -35,11 +34,19 @@ const cartSlice = createSlice({
             return updateCart(state);
         },  
 
+        savePaymentMethod: (state, action) => {
+            state.paymentMethod = action.payload;
+            return updateCart(state);
+        },
 
+        clearCart: (state) => {
+            state.cartItems = [];
+            return updateCart(state);
+        }
         
     }
 });
 
-export const { addToCart, removeFromCart, saveShippingAddress } = cartSlice.actions;
+export const { addToCart, removeFromCart, saveShippingAddress, savePaymentMethod, clearCart } = cartSlice.actions;
 
 export default cartSlice;
